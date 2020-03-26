@@ -10,7 +10,7 @@ const formSearch = document.querySelector('.form-search'),
 
 // Данные
 
-const citiesApi = 'http://api.travelpayouts.com/data/ru/cities.json',
+const citiesApi = 'https://api.travelpayouts.com/data/ru/cities.json',
   proxy = 'https://cors-anywhere.herokuapp.com/',
   API_KEY = '889b033a2665ef3bd21fde2b8a4d1731',
   calendar = 'http://min-prices.aviasales.ru/calendar_preload',
@@ -221,7 +221,8 @@ formSearch.addEventListener('submit', event => {
   if (formData.from && formData.to) {
     const requestData =
       `?depart_date=${formData.when}&origin=${formData.from.code}` +
-      `&destination=${formData.to.code}&one_way=true`;
+      `&destination=${formData.to.code}&one_way=true` +
+      API_KEY;
 
     getData(calendar + requestData, response => {
       renderCheep(response, formData.when);
