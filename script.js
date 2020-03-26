@@ -13,14 +13,14 @@ const formSearch = document.querySelector('.form-search'),
 const citiesApi = 'http://api.travelpayouts.com/data/ru/cities.json',
   proxy = 'https://cors-anywhere.herokuapp.com/',
   API_KEY = '889b033a2665ef3bd21fde2b8a4d1731',
-  calendar = 'https://min-prices.aviasales.ru/calendar_preload',
+  calendar = 'http://min-prices.aviasales.ru/calendar_preload',
   MAX_COUNT = 10;
 
 let city = [];
 
 // Функции
 
-const getData = (url, callback) => {
+const getData = (url, callback, reject = console.error) => {
   // получаем базу данных городов
   const request = new XMLHttpRequest(); //API браузера(объект запроса)
 
@@ -32,10 +32,9 @@ const getData = (url, callback) => {
     if (request.status === 200) {
       callback(request.response);
     } else {
-      console.error(request.status); // сообщаем про ошибку
+      reject(request.status); // сообщаем про ошибку
     }
   }); // событие внутри функции, ready.. - отслеживает событие
-
   request.send(); // чтобы запрос отправить используем send
 };
 
@@ -224,9 +223,16 @@ formSearch.addEventListener('submit', event => {
       `&destination=${formData.to.code}&one_way=true` +
       API_KEY;
 
-    getData(calendar + requestData, response => {
-      renderCheep(response, formData.when);
-    });
+    getData(
+      calendar + requestData,
+      response => {
+        renderCheep(response, formData.when);
+      },
+      error => {
+        alert('В этом направлении нет рейсов', error);
+        console.log('Ошибка', error);
+      }
+    );
   } else {
     alert('Введите корректное название');
   }
